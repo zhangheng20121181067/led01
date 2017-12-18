@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<title>LED1</title>
+	<link href="css/style.css" rel="stylesheet">
+	<!--<link href="css/animate.min.css" rel="stylesheet" >-->
+<!--	<link rel="stylesheet" href="css/postbirdAlertBox.css">-->
+	<script src="js/jquery-1.9.1.min.js"></script>
+	<script src="js/ydui.flexible.js"></script>
+	<script src="js/ajax.js"></script>
+	<!--<script src="js/postbirdAlertBox.js"></script>-->
+</head>
+<body>
+
+<audio id="Jaudio" controls="controls" hidden="hidden" autoplay="autoplay" loop="loop">
+	<source src="./01 - 7obu - Sunburst.mp3" type="audio/mpeg" />
+</audio>
+
+	<div class="rotate_wrap">
+		<div class="text"></div>
+		<div class="panzhen">
+			<div class="zhuanpan" id="i_bg"></div>
+			<div class="center"></div>
+			<div class="zhizhen"></div>
+			<div class="yinying"></div>
+		</div>
+
+		<!--<div class=" click" id="begin"></div>-->
+	</div>
+
+	<div class="modal">
+		<div class="zhongxin">
+			<div class="modalBg">
+				<div class="qiu">
+					<div class=" bounceInDown animated qiu-item item1"></div>
+					<div class=" bounceInDown animated qiu-item item2"></div>
+					<div class=" bounceInDown animated qiu-item item3"></div>
+					<div class=" bounceInDown animated qiu-item item4"></div>
+				</div>
+				<div class="show">
+					<p class="jingxi"></p>
+					<div class="mosmallBg"></div>
+					<p class="title"></p>
+				</div>
+				<!--<img src="images/modalBg.png" alt="">  &lt;!&ndash; images/jiangImg.png&ndash;&gt;-->
+			</div>
+		</div>
+		<div class="xingxing">
+			<!--<div class="xing xing1"></div>-->
+			<!--<div class="xing xing2"></div>-->
+			<!--<div class="xing xing3"></div>-->
+			<!--<div class="xing xing4"></div>-->
+			<!--<div class="xing xing5"></div>-->
+			<!--<div class="hua hua1"></div>-->
+			<!--<div class="hua hua2"></div>-->
+			<!--<div class="hua hua3"></div>-->
+			<!--<div class="hua hua4"></div>-->
+			<!--<div class="hua hua5"></div>-->
+			<!--<div class="hua hua6"></div>-->
+			<!--<div class="hua hua7"></div>-->
+			<!--<div class="hua hua8"></div>-->
+			<!--<div class="yuan yuan1"></div>-->
+			<!--<div class="yuan yuan2"></div>-->
+			<!--<div class="yuan yuan3"></div>-->
+			<!--<div class="yuan yuan4"></div>-->
+			<!--<div class="yuan yuan5"></div>-->
+			<!--<div class="yuan yuan6"></div>-->
+			<!--<div class="yuan yuan7"></div>-->
+			<!--<div class="yuan yuan8"></div>-->
+			<!--<div class="yuan yuan9"></div>-->
+
+		</div>
+	</div>
+
+	<script>
+
+
+
+	//手机调试
+	/*	initConsole();
+		function initConsole(){
+			var js_console = document.createElement('script');
+			js_console.src = './js/vconsole.min.js';
+			document.body.appendChild(js_console);
+			js_console.onload = function () {
+				var vConsole = new VConsole();
+			}
+		}*/
+
+
+		var timer;
+
+		var shuzu=[ [8],[10],[0],[1],[2],[3],[4],[6],[5,7,9,11] ];
+
+
+		var rotate = {
+			rotate_angle : 0, //起始位置为0
+			calculate_result:function(result_angle,type,during_time){//type:0,箭头转动,1,背景转动;during_time:持续时间(s)
+
+
+				var self = this;
+				type = type || 0; // 默认为箭头转动
+				during_time = during_time || 1; // 默认为1s
+
+				var rand_circle = Math.ceil(Math.random() * 4) + 1; // 附加多转几圈，2-5
+
+				zhuan(type);
+				function zhuan(params){
+
+					var getNums=result_angle.data.nums;
+					var shunumLength=shuzu[getNums].length;
+					var randomNum=shuzu[getNums][Math.floor(Math.random()*shunumLength)];
+					//console.log(shuzu[getNums],randomNum);
+
+					self.rotate_angle =  Math.floor(self.rotate_angle/360)*360+rand_circle * 360 + (result_angle.data.nums-1)/12*360;
+					//console.log(self.rotate_angle);
+
+					var obj=params==1?$(".zhuanpan"):$(".zhizhen");
+					//result_angle.data.nums改为randomNum
+					self.rotate_angle =params==1?((Math.floor(self.rotate_angle/360)*360+rand_circle * 360 - (randomNum)/12*360))-10: Math.floor(self.rotate_angle/360)*360+rand_circle * 360 + (randomNum)/12*360-10;
+					obj.css({
+						'transform': 'rotate('+self.rotate_angle+'deg)',
+						'-ms-transform': 'rotate('+self.rotate_angle+'deg)',
+						'-webkit-transform': 'rotate('+self.rotate_angle+'deg)',
+						'-moz-transform': 'rotate('+self.rotate_angle+'deg)',
+						'-o-transform': 'rotate('+self.rotate_angle+'deg)',
+						'transition': 'transform ease-out '+during_time+'s',
+						'-moz-transition': '-moz-transform ease-out '+during_time+'s',
+						'-webkit-transition': '-webkit-transform ease-out '+during_time+'s',
+						'-o-transition': '-o-transform ease-out '+during_time+'s'
+					});
+				}
+
+				// 旋转结束后，允许再次触发
+				setTimeout(function(){
+					// 告诉结果
+					$(".modal .xingxing").empty();
+					var max = 25 + Math.floor(5*Math.random());
+					for(var i = 0; i < max; i++) {
+						var img = document.createElement('div');
+						// mg.innerHTML = '111';
+						img.className = 'xing xing'+ Math.floor(Math.random()*30);
+
+						img.style.left = Math.random()*100 + '%';
+						img.style.top = Math.random()*100 + '%';
+						$(".modal .xingxing").append($(img))
+					}
+					$(".modal").show();
+
+					//抽奖完成接口调用
+					ajax({
+						type:"post",
+						url:"/zqunguang/led_timer_finish",
+						data:{
+							activity_guid:"1"
+						},
+						contentType:"application/x-www-form-urlencoded",
+						success:function(res){
+							setTimer();
+							console.log("LED抽奖动画完成调用:"+JSON.stringify(res));
+						}
+					});
+				},during_time*1000);
+			}
+		};
+
+		$(document).ready(function(){
+
+			//先调用抽奖完成接口调用finish掉
+			ajax({
+				type:"post",
+				url:"/zqunguang/led_timer_finish",
+				data:{
+					activity_guid:"1"
+				},
+				contentType:"application/x-www-form-urlencoded",
+				success:function(res){
+					//console.log("先调用LED抽奖动画完成调用:"+JSON.stringify(res));
+				}
+			});
+
+			//再定时请求
+			setTimer();
+		});
+		function setTimer(time) {
+			timer = setInterval(function() {
+				ajax({
+					type: "post",
+					url: "/zqunguang/led_timer",
+					data: {
+						activity_guid: "1"
+					},
+					contentType: "application/x-www-form-urlencoded",
+					success: function (res) {
+						console.log("LED定时获取抽奖信息:"+JSON.stringify(res));
+						console.log(res.data.title);
+						//开始抽奖
+						if(res.data.isCan){
+							$(".modal").hide();  //先隐藏
+							if(res.data.nums==8){
+								$(".modal p.jingxi").text("惊喜奖");
+								if(res.data.children.nums==801){
+									$(".modal p.title").text(res.data.children.title);
+								}else{
+									$(".modal p.title").text("");
+								}
+
+								//$(".modal p.title").text(res.data.children.title);
+
+								//$(".modal .modalBg .mosmallBg").css("background-image","");
+							}else{
+								/*$(".modal p.jingxi").text("");
+								$(".modal p.title").text(res.data.title);*/
+								$(".modal p.jingxi").text(res.data.title);
+								$(".modal p.title").text(res.data.intros);
+
+							}
+							var backimgSrc="url(http://open1.ufunet.cn"+res.data.covers;
+							$(".modal .modalBg .mosmallBg").css("background-image",backimgSrc);
+
+
+						/*	var backimgSrc="url(images/"+res.data.nums+".png";
+							$(".modal .modalBg .mosmallBg").css("background-image",backimgSrc);*/
+
+
+							closeTimer();
+							rotate.calculate_result(res,1,3);
+						}
+
+					}
+				});
+			},time?time:1000)
+		}
+		function closeTimer() {
+			clearInterval(timer)
+		}
+
+		//弹框
+		document.getElementsByClassName("modal")[0].addEventListener("click",function(e){
+			$(this).hide();
+		});
+	</script>
+</body>
+</html>
